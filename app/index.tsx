@@ -11,7 +11,7 @@ const HomePage = () => {
   useEffect(() => {
     if (!loading) {
       if (session) {
-        router.replace("/profile");
+        router.replace("/profile/");
       } else {
         router.replace("/auth");
       }

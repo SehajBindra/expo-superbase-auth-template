@@ -14,7 +14,7 @@ const ProfileAction = ({ icon, label, link }: ProfileActionProps) => (
     <View className="w-12 h-12 flex items-center justify-center bg-muted rounded-full">
       {icon}
     </View>
-    <Link href={`/${link}`} className="text-lg font-medium mr-auto">
+    <Link href={`/${link}`} className="text-lg font-medium flex-1 w-full">
       <Text className="text-foreground">{label}</Text>
     </Link>
     <ChevronRight size={20} />

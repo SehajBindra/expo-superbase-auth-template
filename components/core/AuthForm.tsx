@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MotiView } from "moti";
 import { Controller, useForm } from "react-hook-form";
 
+import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { supabase } from "~/lib/supabase";
@@ -60,6 +61,7 @@ const AuthForm = ({ type }: { type: string }) => {
           return;
         }
         reset();
+        router.replace("/profile/complete-profile");
       }
     } catch (error) {
       console.error("SIGN IN ERROR: ", error);

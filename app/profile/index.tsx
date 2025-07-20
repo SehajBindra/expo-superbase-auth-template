@@ -11,8 +11,16 @@ import { supabase } from "~/lib/supabase";
 import { LogOut, SunMoon, UserPen } from "lucide-react-native";
 
 const profileActions = [
-  { icon: <UserPen size={20} />, label: "Edit Profile", link: "edit-profile" },
-  { icon: <SunMoon size={20} />, label: "App Theme", link: "preferences" },
+  {
+    icon: <UserPen size={20} />,
+    label: "Edit Profile",
+    link: "profile/edit-profile",
+  },
+  {
+    icon: <SunMoon size={20} />,
+    label: "App Theme",
+    link: "profile/preferences",
+  },
 ];
 
 const ProfilePage = () => {
@@ -50,11 +58,9 @@ const ProfilePage = () => {
               className="w-10 h-10 object-contain"
             />
             <View className="flex flex-col">
-              <Text className="text-xl font-medium">
-                {profile?.full_name ?? "Krishang Sharma"}
-              </Text>
+              <Text className="text-xl font-medium">{profile?.full_name}</Text>
               <Text className="text-muted-foreground">
-                {session?.user.email}
+                @{profile?.username}
               </Text>
             </View>
           </View>
