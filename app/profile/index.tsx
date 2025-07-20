@@ -1,13 +1,14 @@
+import { router } from "expo-router";
 import React from "react";
 import { Image, SafeAreaView, View } from "react-native";
 
 import { useAuth } from "~/components/core/AuthContext";
 import ProfileAction from "~/components/core/ProfileAction";
+import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { supabase } from "~/lib/supabase";
 
 import { LogOut, SunMoon, UserPen } from "lucide-react-native";
-import { Button } from "~/components/ui/button";
-import { supabase } from "~/lib/supabase";
 
 const profileActions = [
   { icon: <UserPen size={20} />, label: "Edit Profile", link: "edit-profile" },
@@ -18,8 +19,15 @@ const ProfilePage = () => {
   const { loading, session, profile } = useAuth();
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    console.error("SIGN OUT ERROR: ", error);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("SIGN OUT ERROR: ", error);
+      }
+      router.replace("/");
+    } catch (error) {
+      console.error("SIGN OUT ERROR: ", error);
+    }
   };
 
   return (
@@ -62,6 +70,7 @@ const ProfilePage = () => {
             <Button
               variant="destructive"
               className="flex flex-row items-center gap-1 self-end"
+              onPress={handleSignOut}
             >
               <LogOut color="white" size={20} />
               <Text className="text-sm">Sign Out</Text>
