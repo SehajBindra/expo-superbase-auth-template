@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Image, SafeAreaView, View } from "react-native";
+
 import AuthForm from "~/components/core/AuthForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Text } from "~/components/ui/text";

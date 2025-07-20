@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-
-import { MotiView } from "moti";
 import { Alert, View } from "react-native";
-import { Button } from "../ui/button";
-import { Text } from "../ui/text";
-import InputGroup from "./InputGroup";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MotiView } from "moti";
 import { Controller, useForm } from "react-hook-form";
+
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
 import { supabase } from "~/lib/supabase";
 import {
   LogInFormValues,
@@ -15,6 +14,7 @@ import {
   SignUpFormValues,
   signUpSchema,
 } from "~/schemas/auth";
+import InputGroup from "./InputGroup";
 
 const AuthForm = ({ type }: { type: string }) => {
   const isLogin = type === "login";
@@ -29,6 +29,9 @@ const AuthForm = ({ type }: { type: string }) => {
     formState: { errors, isSubmitting },
   } = useForm<LogInFormValues | SignUpFormValues>({
     resolver: zodResolver(isLogin ? loginSchema : signUpSchema),
+    defaultValues: isLogin
+      ? { email: "", password: "" }
+      : { email: "", password: "", confirmPassword: "" },
   });
 
   const onSubmit = async (formData: LogInFormValues | SignUpFormValues) => {
@@ -44,7 +47,7 @@ const AuthForm = ({ type }: { type: string }) => {
           reset();
           return;
         }
-        console.log("Sign In ho gaya!!!!!");
+        reset();
       } else {
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
@@ -56,7 +59,7 @@ const AuthForm = ({ type }: { type: string }) => {
           reset();
           return;
         }
-        console.log("Sign Up ho gaya!!!!!");
+        reset();
       }
     } catch (error) {
       console.error("SIGN IN ERROR: ", error);
@@ -189,7 +192,7 @@ const AuthForm = ({ type }: { type: string }) => {
                     isPassword={true}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    value={value}
+                    value={value ?? ""}
                     error={
                       "confirmPassword" in errors
                         ? errors.confirmPassword?.message
