@@ -33,17 +33,17 @@ const buttonVariants = cva(
 );
 
 const buttonTextVariants = cva(
-  "web:whitespace-nowrap text-sm native:text-base font-medium text-foreground web:transition-colors",
+  "web:whitespace-nowrap text-sm native:text-base font-medium web:transition-colors",
   {
     variants: {
       variant: {
-        default: "text-primary-foreground",
+        default: "text-foreground",
         destructive: "text-destructive-foreground",
         outline: "group-active:text-accent-foreground",
         secondary:
           "text-secondary-foreground group-active:text-secondary-foreground",
         ghost: "group-active:text-accent-foreground",
-        link: "text-primary group-active:underline",
+        link: "text-foreground hover:text-primary group-active:underline",
       },
       size: {
         default: "",
