@@ -8,7 +8,7 @@ import { Text } from "~/components/ui/text";
 const Register = () => {
   const [value, setValue] = useState("login");
   return (
-    <View className="w-full h-screen px-5">
+    <View className="w-full h-screen dark:bg-background px-5">
       <SafeAreaView className="flex flex-col gap-10">
         <View className="flex flex-row items-center justify-center gap-4 mt-10">
           <Image
@@ -31,7 +31,7 @@ const Register = () => {
         </View>
         <View>
           <Tabs value={value} onValueChange={setValue}>
-            <TabsList className="flex flex-row items-center justify-between rounded-xl">
+            <TabsList className="flex flex-row items-center justify-between rounded-xl bg-muted">
               <TabsTrigger value="login" className="w-1/2 rounded-lg">
                 <Text>Login</Text>
               </TabsTrigger>
