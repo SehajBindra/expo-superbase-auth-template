@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MotiView } from "moti";
 import { Controller, useForm } from "react-hook-form";
 
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { supabase } from "~/lib/supabase";
@@ -49,6 +49,7 @@ const AuthForm = ({ type }: { type: string }) => {
           return;
         }
         reset();
+        router.push("/");
       } else {
         const { error } = await supabase.auth.signUp({
           email: formData.email,
@@ -61,6 +62,7 @@ const AuthForm = ({ type }: { type: string }) => {
           return;
         }
         reset();
+        router.push("/");
       }
     } catch (error) {
       console.error("SIGN IN ERROR: ", error);

@@ -39,17 +39,16 @@ const HomePage = () => {
   return (
     <View className="h-screen items-center justify-center bg-background">
       {session ? (
-        <>
+        <View className="flex flex-col gap-5 items-center">
+          <Text className="text-4xl font-bold">User Signed In</Text>
+          <Text className="">{session.user.email}</Text>
           <Button onPress={handleSignOut} disabled={isSigningOut}>
             <Text>{isSigningOut ? "Signing Out" : "Sign Out"}</Text>
           </Button>
-          <Button
-            onPress={() => router.push("/auth/update-password")}
-            className="mt-10"
-          >
+          <Button onPress={() => router.push("/auth/update-password")}>
             <Text>Update Password</Text>
           </Button>
-        </>
+        </View>
       ) : (
         <ActivityIndicator size="large" />
       )}
