@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MotiView } from "moti";
 import { Controller, useForm } from "react-hook-form";
 
-import { router } from "expo-router";
+import { Link } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { supabase } from "~/lib/supabase";
@@ -38,7 +38,7 @@ const AuthForm = ({ type }: { type: string }) => {
   const onSubmit = async (formData: LogInFormValues | SignUpFormValues) => {
     try {
       if (type === "login") {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
@@ -50,7 +50,7 @@ const AuthForm = ({ type }: { type: string }) => {
         }
         reset();
       } else {
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
         });
@@ -61,7 +61,6 @@ const AuthForm = ({ type }: { type: string }) => {
           return;
         }
         reset();
-        router.replace("/profile/complete-profile");
       }
     } catch (error) {
       console.error("SIGN IN ERROR: ", error);
@@ -84,7 +83,11 @@ const AuthForm = ({ type }: { type: string }) => {
       <MotiView
         key={type}
         from={{ translateX: "50%", opacity: 0 }}
-        animate={{ translateX: 0, opacity: 1 }}
+        animate={{ translateX: [0], opacity: 1 }}
+        transition={{
+          translateX: { type: "timing", duration: 500 },
+          opacity: { type: "timing", duration: 500 },
+        }}
       >
         <View className="flex flex-col gap-5">
           <Controller
@@ -117,10 +120,12 @@ const AuthForm = ({ type }: { type: string }) => {
               />
             )}
           />
-          {/* //TODO: FORGOT PASSWORD YET TO BE IMPLEMENTED */}
-          <Text className="text-muted-foreground self-end underline">
+          <Link
+            href="/auth/reset-password"
+            className="text-muted-foreground self-end underline"
+          >
             Forgot Password?
-          </Text>
+          </Link>
           <Button
             size="lg"
             disabled={isSubmitting}
@@ -139,13 +144,18 @@ const AuthForm = ({ type }: { type: string }) => {
       key={type}
       from={{ translateX: "50%", opacity: 0 }}
       animate={{ translateX: 0, opacity: 1 }}
+      transition={{
+        translateX: { type: "timing", duration: 500 },
+        opacity: { type: "timing", duration: 500 },
+      }}
     >
       <MotiView
         key={step}
         from={{ translateX: "50%", opacity: 0 }}
         animate={{ translateX: 0, opacity: 1 }}
         transition={{
-          delay: 100,
+          translateX: { type: "timing", duration: 500 },
+          opacity: { type: "timing", duration: 500 },
         }}
       >
         <View className="flex flex-col gap-5">
