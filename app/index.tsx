@@ -2,11 +2,11 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
+import { useAuth } from "@/components/core/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import { supabase } from "@/lib/supabase";
 import { Toaster } from "sonner-native";
-import { useAuth } from "~/components/core/AuthContext";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
-import { supabase } from "~/lib/supabase";
 
 const HomePage = () => {
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -20,7 +20,7 @@ const HomePage = () => {
         router.replace("/auth");
       }
     }
-  }, [session, loading, router]);
+  }, [session, loading]);
 
   const handleSignOut = async () => {
     try {

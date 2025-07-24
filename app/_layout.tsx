@@ -4,7 +4,7 @@ import * as React from "react";
 import { PortalHost } from "@rn-primitives/portal";
 import "react-native-reanimated";
 
-import { AuthProvider } from "~/components/core/AuthContext";
+import { AuthProvider } from "@/components/core/AuthContext";
 import "./globals.css";
 
 if (typeof global.structuredClone === "undefined") {

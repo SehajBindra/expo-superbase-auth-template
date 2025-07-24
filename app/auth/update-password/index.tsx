@@ -8,10 +8,10 @@ import { MotiView } from "moti";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-import InputGroup from "~/components/core/InputGroup";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
-import { supabase } from "~/lib/supabase";
+import InputGroup from "@/components/core/InputGroup";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import { supabase } from "@/lib/supabase";
 
 export const updatePasswordSchema = z
   .object({
@@ -27,12 +27,13 @@ export type UpdatePasswordValues = z.infer<typeof updatePasswordSchema>;
 
 const UpdatePasswordForm = () => {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     reset,
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<UpdatePasswordValues>({
     resolver: zodResolver(updatePasswordSchema),
     defaultValues: {
@@ -42,18 +43,26 @@ const UpdatePasswordForm = () => {
   });
 
   const onSubmit = async (formData: UpdatePasswordValues) => {
+    setIsLoading(true);
+
     try {
-      const { error } = await supabase.auth.updateUser({
+      const { data, error } = await supabase.auth.updateUser({
         password: formData.password,
       });
 
       if (error) {
-        Alert.alert("Error", error.message);
+        console.error("Supabase password update error:", error);
+        Alert.alert("Error", error.message || "Failed to update password");
+        setIsLoading(false);
         reset();
         return;
       }
 
+      console.log("Password Update data: ", data);
+
       setIsSuccess(true);
+      setIsLoading(false);
+
       Alert.alert("Success!", "Your password has been updated successfully.", [
         {
           text: "OK",
@@ -66,6 +75,7 @@ const UpdatePasswordForm = () => {
     } catch (error) {
       console.error("PASSWORD UPDATE ERROR: ", error);
       Alert.alert("Error", "Something went wrong. Please try again.");
+      setIsLoading(false);
       reset();
     }
   };
@@ -107,70 +117,73 @@ const UpdatePasswordForm = () => {
         opacity: { type: "timing", duration: 500 },
       }}
     >
-      <SafeAreaView>
-        <View className="w-full flex flex-row items-center gap-2 mt-20">
-          <TouchableOpacity
-            className="w-12 h-12 flex items-center justify-center"
-            onPress={() => router.back()}
-          >
-            <ChevronLeft size={25} />
-          </TouchableOpacity>
-          <Text className="text-3xl font-bold">Update Your Password</Text>
-        </View>
-        <View className="w-full h-screen bg-bacakground flex flex-col gap-5 px-5">
-          <SafeAreaView className="flex flex-col ">
-            <View className="mb-4">
-              <Text className="text-muted-foreground">
-                Enter your new password below. Make sure it's strong and secure.
-              </Text>
-            </View>
-            <View className="flex flex-col gap-5">
-              <Controller
-                control={control}
-                name="password"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <InputGroup
-                    label="New Password"
-                    placeholder="Enter your new password"
-                    isPassword={true}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={errors.password?.message}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="confirmPassword"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <InputGroup
-                    label="Confirm New Password"
-                    placeholder="Confirm your new password"
-                    isPassword={true}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={errors.confirmPassword?.message}
-                  />
-                )}
-              />
-
-              <Button
-                size="lg"
-                className="native:rounded-2xl mt-4"
-                onPress={handleSubmit(onSubmit)}
-                disabled={isSubmitting}
-              >
-                <Text>
-                  {isSubmitting ? "Updating Password..." : "Update Password"}
+      <View className="w-full h-screen bg-background">
+        <SafeAreaView>
+          <View className="w-full flex flex-row items-center gap-2 pt-10">
+            <TouchableOpacity
+              className="w-12 h-12 flex items-center justify-center"
+              onPress={() => router.push("/")}
+            >
+              <ChevronLeft size={25} />
+            </TouchableOpacity>
+            <Text className="text-3xl font-bold">Update Your Password</Text>
+          </View>
+          <View className="w-full h-screen bg-background flex flex-col gap-5 px-5">
+            <SafeAreaView className="flex flex-col ">
+              <View className="mb-4">
+                <Text className="text-muted-foreground">
+                  Enter your new password below. Make sure it's strong and
+                  secure.
                 </Text>
-              </Button>
-            </View>
-          </SafeAreaView>
-        </View>
-      </SafeAreaView>
+              </View>
+              <View className="flex flex-col gap-5">
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <InputGroup
+                      label="New Password"
+                      placeholder="Enter your new password"
+                      isPassword={true}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={errors.password?.message}
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <InputGroup
+                      label="Confirm New Password"
+                      placeholder="Confirm your new password"
+                      isPassword={true}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={errors.confirmPassword?.message}
+                    />
+                  )}
+                />
+
+                <Button
+                  size="lg"
+                  className="native:rounded-2xl mt-4"
+                  onPress={handleSubmit(onSubmit)}
+                  disabled={isLoading}
+                >
+                  <Text>
+                    {isLoading ? "Updating Password..." : "Update Password"}
+                  </Text>
+                </Button>
+              </View>
+            </SafeAreaView>
+          </View>
+        </SafeAreaView>
+      </View>
     </MotiView>
   );
 };

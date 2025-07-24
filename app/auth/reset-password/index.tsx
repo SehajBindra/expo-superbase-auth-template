@@ -1,3 +1,7 @@
+import InputGroup from "@/components/core/InputGroup";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import { supabase } from "@/lib/supabase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
@@ -6,10 +10,6 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, TouchableOpacity, View } from "react-native";
 import z from "zod";
-import InputGroup from "~/components/core/InputGroup";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
-import { supabase } from "~/lib/supabase";
 
 export const resetPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
