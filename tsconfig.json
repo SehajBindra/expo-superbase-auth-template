@@ -3,10 +3,21 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
-    "types": ["nativewind/types", "react-native-reanimated"],
+    "types": [
+      "nativewind/types",
+      "react-native-reanimated"
+    ],
     "paths": {
-      "~/*": ["*"]
+      "@/*": [
+        "*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "nativewind-env.d.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

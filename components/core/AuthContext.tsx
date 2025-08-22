@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
+import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
-import { supabase } from "~/lib/supabase";
 
 export type UserProfile = {
   id: string;
