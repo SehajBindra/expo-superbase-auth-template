@@ -81,6 +81,11 @@ const UpdatePasswordForm = () => {
             refresh_token: params.refresh_token
           });
           
+          // Store tokens for later use in password update
+          (window as any).recoveryTokens = {
+            access_token: params.access_token,
+            refresh_token: params.refresh_token
+          };
         
           console.log("Recovery session ready (bypassing setSession)");
           setSessionReady(true);
@@ -133,6 +138,7 @@ const UpdatePasswordForm = () => {
       console.log("API response status:", response.status);
       const result = await response.json();
       console.log("API response:", result);
+      await supabase.auth.signOut();
 
       if (!response.ok) {
         console.error("API error:", result);
@@ -177,7 +183,7 @@ const UpdatePasswordForm = () => {
           Your password has been successfully updated. You can now log in with
           your new password.
         </Text>
-        <Button onPress={() => router.replace("/")}>
+        <Button onPress={() => router.replace("/auth")}>
           <Text>Continue</Text>
         </Button>
       </View>

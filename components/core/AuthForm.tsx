@@ -40,21 +40,36 @@ const AuthForm = ({ type }: { type: string }) => {
       if (type === "login") {
         console.log("SIGN IN FORM DATA: ", formData);
 
-
         try {
+          console.log("Attempting to sign in with Supabase...");
           const { data, error } = await supabase.auth.signInWithPassword({
             email: formData.email,
             password: formData.password,
           });
+          
           console.log("SIGN IN DATA: ", data);
           console.log("SIGN IN ERROR: ", error);
-        } catch (error) {
-          console.error("SIGN IN ERROR: ", error);
-        }
 
-        
-    
-     router.replace("/");
+          if (error) {
+            console.error("Supabase auth error:", error);
+            Alert.alert(error.message);
+            reset();
+            return;
+          }
+
+          if (data?.user) {
+            console.log("Login successful, user:", data.user.email);
+            console.log("Redirecting to home...");
+            router.replace("/");
+          } else {
+            console.log("No user data returned");
+          }
+        } catch (catchError) {
+          console.error("Unexpected error during login:", catchError);
+          Alert.alert("An unexpected error occurred");
+          reset();
+          return;
+        }
 
       } else {
         const { data, error } = await supabase.auth.signUp({

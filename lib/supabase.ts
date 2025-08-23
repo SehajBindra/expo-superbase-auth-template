@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
@@ -43,15 +42,16 @@ const webSupabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 
 
-const supabaseUrl = Platform.OS === "web" ? webSupabaseUrl : Constants.expoConfig?.extra?.supabaseUrl;
+const supabaseUrl = Platform.OS === "web" ? webSupabaseUrl : process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey =
-  Platform.OS === "web" ? webSupabaseAnonKey : Constants.expoConfig?.extra?.supabaseAnonKey;
+  Platform.OS === "web" ? webSupabaseAnonKey : process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
 
 
 
 export const supabase = createClient(
-  supabaseUrl,
-  supabaseAnonKey,
+  supabaseUrl!,
+  supabaseAnonKey!,
   {
     auth: {
       storage:
