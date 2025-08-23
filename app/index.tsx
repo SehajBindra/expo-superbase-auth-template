@@ -24,11 +24,15 @@ const HomePage = () => {
   const handleSignOut = async () => {
     try {
       setIsSigningOut(true);
-      const { error } = await supabase.auth.signOut();
-      if (error) {
+      try {
+        const { error } = await supabase.auth.signOut();
+        console.log("SIGN OUT ERROR: ", error);
+      } catch (error) {
         console.log("SIGN OUT ERROR: ", error);
         setIsSigningOut(false);
       }
+     
+     
     } catch (err) {
       setIsSigningOut(false);
       console.log("SIGN OUT CATCH ERROR: ", err);

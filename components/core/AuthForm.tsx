@@ -40,14 +40,19 @@ const AuthForm = ({ type }: { type: string }) => {
       if (type === "login") {
         console.log("SIGN IN FORM DATA: ", formData);
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
-        });
 
-        console.log("SIGN IN DATA: ", data);
-        console.log("SIGN IN ERROR: ", error);
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: formData.email,
+            password: formData.password,
+          });
+          console.log("SIGN IN DATA: ", data);
+          console.log("SIGN IN ERROR: ", error);
+        } catch (error) {
+          console.error("SIGN IN ERROR: ", error);
+        }
 
+        
     
      router.replace("/");
 
