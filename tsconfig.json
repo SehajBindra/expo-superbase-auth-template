@@ -3,14 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
-    "types": [
-      "nativewind/types",
-      "react-native-reanimated"
-    ],
+    "types": ["node", "nativewind/types", "react-native-reanimated"],
     "paths": {
-      "@/*": [
-        "*"
-      ]
+      "@/*": ["*"]
     }
   },
   "include": [
