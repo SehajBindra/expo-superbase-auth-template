@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
@@ -41,29 +40,25 @@ const WebStorageAdapter = {
 const webSupabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const webSupabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-const nativeSupabaseUrl = Constants.expoConfig?.extra?.supabaseUrl;
-const nativeSupabaseAnonKey = Constants.expoConfig?.extra?.supabaseAnonKey;
 
-const supabaseUrl = Platform.OS === "web" ? webSupabaseUrl : nativeSupabaseUrl;
+
+const supabaseUrl = Platform.OS === "web" ? webSupabaseUrl : process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey =
-  Platform.OS === "web" ? webSupabaseAnonKey : nativeSupabaseAnonKey;
+  Platform.OS === "web" ? webSupabaseAnonKey : process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    `Missing Supabase environment variables for platform: ${Platform.OS}. ` +
-      `Make sure you have ${
-        Platform.OS === "web"
-          ? "EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY"
-          : "SUPABASE_URL and SUPABASE_ANON_KEY"
-      } set.`
-  );
-}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    storage: Platform.OS === "web" ? WebStorageAdapter : ExpoSecureStoreAdapter,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
-  },
-});
+
+
+export const supabase = createClient(
+  supabaseUrl!,
+  supabaseAnonKey!,
+  {
+    auth: {
+      storage:
+        Platform.OS === "web" ? WebStorageAdapter : ExpoSecureStoreAdapter,
+      autoRefreshToken: true,
+      persistSession: true,
+      // detectSessionInUrl: true,
+    },
+  }
+);

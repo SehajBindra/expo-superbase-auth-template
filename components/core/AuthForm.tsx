@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Alert, View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MotiView } from "moti";
+// import { MotiView } from "moti";
 import { Controller, useForm } from "react-hook-form";
 
-import { router } from "expo-router";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
-import { supabase } from "~/lib/supabase";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
+import { supabase } from "@/lib/supabase";
 import {
   LogInFormValues,
   loginSchema,
   SignUpFormValues,
   signUpSchema,
-} from "~/schemas/auth";
+} from "@/schemas/auth";
+import { router } from "expo-router";
 import InputGroup from "./InputGroup";
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -38,30 +38,56 @@ const AuthForm = ({ type }: { type: string }) => {
   const onSubmit = async (formData: LogInFormValues | SignUpFormValues) => {
     try {
       if (type === "login") {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
-        });
+        console.log("SIGN IN FORM DATA: ", formData);
 
-        if (error) {
-          Alert.alert(error.message);
+        try {
+          console.log("Attempting to sign in with Supabase...");
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: formData.email,
+            password: formData.password,
+          });
+          
+          console.log("SIGN IN DATA: ", data);
+          console.log("SIGN IN ERROR: ", error);
+
+          if (error) {
+            console.error("Supabase auth error:", error);
+            Alert.alert(error.message);
+            reset();
+            return;
+          }
+
+          if (data?.user) {
+            console.log("Login successful, user:", data.user.email);
+            console.log("Redirecting to home...");
+            router.replace("/");
+          } else {
+            console.log("No user data returned");
+          }
+        } catch (catchError) {
+          console.error("Unexpected error during login:", catchError);
+          Alert.alert("An unexpected error occurred");
           reset();
           return;
         }
-        reset();
+
       } else {
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
         });
 
+        console.log("SIGN UP DATA: ", data);
+        console.log("SIGN UP ERROR: ", error);
+
         if (error) {
           Alert.alert(error.message);
           reset();
           return;
         }
+        console.log("SIGN UP SUCCESS: ", data);
         reset();
-        router.replace("/profile/complete-profile");
+        router.replace("/");
       }
     } catch (error) {
       console.error("SIGN IN ERROR: ", error);
@@ -81,10 +107,8 @@ const AuthForm = ({ type }: { type: string }) => {
 
   if (type === "login") {
     return (
-      <MotiView
+      <View
         key={type}
-        from={{ translateX: "50%", opacity: 0 }}
-        animate={{ translateX: 0, opacity: 1 }}
       >
         <View className="flex flex-col gap-5">
           <Controller
@@ -118,7 +142,10 @@ const AuthForm = ({ type }: { type: string }) => {
             )}
           />
           {/* //TODO: FORGOT PASSWORD YET TO BE IMPLEMENTED */}
-          <Text className="text-muted-foreground self-end underline">
+          <Text
+            onPress={() => router.push("/auth/reset-password")}
+            className="text-muted-foreground self-end underline"
+          >
             Forgot Password?
           </Text>
           <Button
@@ -130,23 +157,16 @@ const AuthForm = ({ type }: { type: string }) => {
             <Text>{isSubmitting ? "Logging In..." : "Login"}</Text>
           </Button>
         </View>
-      </MotiView>
+      </View>
     );
   }
 
   return (
-    <MotiView
+    <View
       key={type}
-      from={{ translateX: "50%", opacity: 0 }}
-      animate={{ translateX: 0, opacity: 1 }}
     >
-      <MotiView
+      <View
         key={step}
-        from={{ translateX: "50%", opacity: 0 }}
-        animate={{ translateX: 0, opacity: 1 }}
-        transition={{
-          delay: 100,
-        }}
       >
         <View className="flex flex-col gap-5">
           {step === 0 && (
@@ -237,8 +257,8 @@ const AuthForm = ({ type }: { type: string }) => {
             </View>
           )}
         </View>
-      </MotiView>
-    </MotiView>
+      </View>
+    </View>
   );
 };
 
